@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nur Halimah - Portofolio & CV Digital Interactive</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rose: {
+                            50: '#fff5f7',
+                            100: '#ffeef2',
+                            200: '#ffd0dc',
+                            300: '#fba5ba',
+                            400: '#f77395',
+                            500: '#ee4773',
+                            600: '#da2658',
+                            700: '#b81944',
+                        },
+                        blush: {
+                            light: '#FAF0F2',
+                            soft: '#F4E3E6',
+                            gold: '#D4AF37',
+                            accent: '#C86D7B',
+                            mauve: '#9E5B6A',
+                            dark: '#3D2229'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        script: ['Sacramento', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF5F6;
+            color: #3D2229;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(244, 227, 230, 0.9);
+        }
+
+        .glass-dock {
+            background: rgba(255, 245, 247, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(200, 109, 123, 0.25);
+            box-shadow: 0 20px 40px -15px rgba(200, 109, 123, 0.15);
+        }
+
+        /* View Switching Animations */
+        .page-view {
+            display: none;
+            opacity: 0;
+            transform: translateY(12px) scale(0.99);
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .page-view.active-view {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Petal Canvas Overlay */
+        #petal-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Custom Hover Effect */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(200, 109, 123, 0.2);
+        }
+
+        /* Recipe Card Shadow */
+        .recipe-shadow {
+            box-shadow: 0 12px 35px -10px rgba(158, 91, 106, 0.15);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between">
+
+    <!-- Falling Petals Canvas -->
+    <canvas id="petal-canvas"></canvas>
+
+    <!-- Background Decorative Organic Shapes -->
+    <div class="fixed top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-rose-200/40 blur-3xl pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-rose-100/60 blur-3xl pointer-events-none z-0"></div>
+
+    <!-- MAIN FLOATING NAVIGATION DOCK (BERBEDA & UNIK) -->
+    <header class="fixed top-6 inset-x-0 mx-auto w-[92%] max-w-2xl z-50">
+        <nav class="glass-dock rounded-full px-4 py-2.5 flex items-center justify-between">
+            <!-- Brand Badge -->
+            <button onclick="switchPage('beranda')" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white/70 hover:bg-rose-100/80 transition-all border border-rose-200/60">
+                <span class="w-7 h-7 rounded-full bg-blush-accent text-white flex items-center justify-center font-serif text-xs font-bold shadow-sm">NH</span>
+                <span class="font-serif font-bold text-xs tracking-wide text-blush-dark hidden sm:inline">Nur Halimah</span>
+            </button>
+
+            <!-- Navigation Links -->
+            <div class="flex items-center gap-1 sm:gap-2">
+                <button onclick="switchPage('beranda')" id="nav-beranda" class="nav-btn px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-blush-dark hover:bg-rose-100/70">
+                    <i data-lucide="flower" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Beranda</span>
+                </button>
+                <button onclick="switchPage('tentang')" id="nav-tentang" class="nav-btn px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-blush-dark hover:bg-rose-100/70">
+                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Profil</span>
+                </button>
+                <button onclick="switchPage('hobi')" id="nav-hobi" class="nav-btn px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-blush-dark hover:bg-rose-100/70">
+                    <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Dapur & Hobi</span>
+                </button>
+                <button onclick="switchPage('ceo')" id="nav-ceo" class="nav-btn px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-blush-dark hover:bg-rose-100/70">
+                    <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Visi CEO</span>
+                </button>
+                <button onclick="switchPage('kontak')" id="nav-kontak" class="nav-btn px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-blush-dark hover:bg-rose-100/70">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Kontak</span>
+                </button>
+            </div>
+
+            <!-- Petals Controls Switch -->
+            <button id="toggle-petals" title="Toggle Hujan Kelopak Bunga" class="p-2 rounded-full bg-white/80 hover:bg-rose-200/60 text-blush-accent transition-all border border-rose-200">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- CONTENT VIEWS WRAPPER -->
+    <main class="relative z-10 pt-28 pb-16 px-4 md:px-8 max-w-5xl mx-auto flex-grow w-full">
+
+        <!-- ================= PAGE 1: BERANDA (HOME) ================= -->
+        <section id="view-beranda" class="page-view active-view">
+            <div class="grid md:grid-cols-12 gap-8 items-center min-h-[70vh]">
+                <!-- Left Welcome Hero Card -->
+                <div class="md:col-span-7 space-y-6 text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-100/80 border border-rose-200 text-blush-accent text-xs font-semibold uppercase tracking-wider">
+                        <i data-lucide="sparkle" class="w-3.5 h-3.5"></i> Pelajar & Aspiring Executive
+                    </div>
+
+                    <h1 class="text-4xl md:text-6xl font-serif font-bold text-blush-dark leading-tight">
+                        Selamat Datang di Portofolio Digital <br/>
+                        <span class="font-script text-5xl md:text-7xl text-blush-accent block mt-1">Nur Halimah</span>
+                    </h1>
+
+                    <p class="text-gray-600 font-light text-base md:text-lg leading-relaxed max-w-lg">
+                        Ruang estetis yang memadukan semangat belajar, kreativitas di dapur, serta ambisi besar memimpin di panggung BUMN Indonesia.
+                    </p>
+
+                    <!-- Quote Frame -->
+                    <div class="glass-panel p-4 rounded-2xl border-l-4 border-l-blush-accent text-xs md:text-sm italic text-gray-700 max-w-md mx-auto md:mx-0">
+                        "Setiap resep yang luar biasa diawali dengan ketelitian, persis seperti impian besar yang diraih dengan kerja keras konsisten."
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                        <button onclick="switchPage('tentang')" class="px-6 py-3 bg-blush-accent hover:bg-rose-600 text-white font-medium rounded-full shadow-lg shadow-rose-300/40 hover-lift text-xs uppercase tracking-wider flex items-center gap-2">
+                            Lihat Profil Lengkap <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="switchPage('ceo')" class="px-6 py-3 bg-white/90 hover:bg-rose-50 text-blush-dark border border-rose-200 font-medium rounded-full hover-lift text-xs uppercase tracking-wider shadow-sm flex items-center gap-2">
+                            <i data-lucide="crown" class="w-4 h-4 text-blush-gold"></i> Visi CEO BUMN
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Floral Portrait Showcase -->
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80">
+                        <!-- Floral Frame SVG Outer -->
+                        <div class="absolute inset-0 rounded-3xl border-2 border-blush-gold/40 transform rotate-6 scale-105"></div>
+                        <div class="absolute inset-0 rounded-3xl bg-rose-200/50 transform -rotate-3 scale-105 blur-sm"></div>
+
+                        <!-- Card Center -->
+                        <div class="relative w-full h-full rounded-3xl overflow-hidden glass-panel p-6 flex flex-col justify-between items-center text-center shadow-xl border border-rose-200">
+                            <div class="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center border-2 border-rose-300 shadow-md">
+                                <span class="font-serif text-3xl font-bold text-blush-accent">NH</span>
+                            </div>
+
+                            <div>
+                                <h3 class="font-serif text-xl font-bold text-blush-dark">Nur Halimah</h3>
+                                <p class="text-xs text-blush-accent font-semibold mt-0.5">Pelajar & Future Leader</p>
+                            </div>
+
+                            <!-- Mini Badges -->
+                            <div class="w-full grid grid-cols-2 gap-2 pt-4 border-t border-rose-100 text-[11px]">
+                                <div class="bg-rose-50/80 p-2 rounded-xl text-blush-dark font-medium">
+                                    <span class="block text-rose-500 font-bold">Hobi</span> Memasak
+                                </div>
+                                <div class="bg-rose-50/80 p-2 rounded-xl text-blush-dark font-medium">
+                                    <span class="block text-blush-gold font-bold">Cita-Cita</span> CEO BUMN
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: TENTANG SAYA (ABOUT & SKILLS) ================= -->
+        <section id="view-tentang" class="page-view">
+            <!-- Header Banner -->
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="font-script text-3xl text-blush-accent block">Mengenal Nur Halimah</span>
+                <h2 class="text-3xl font-serif font-bold text-blush-dark">Profil & Kepribadian</h2>
+                <div class="w-12 h-1 bg-blush-accent mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <!-- Bento Box Grid Layout -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Academic Card -->
+                <div class="glass-panel p-6 rounded-3xl hover-lift border border-rose-200 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-3 bg-rose-100 rounded-2xl text-blush-accent">
+                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-lg font-bold text-blush-dark">Identitas Akademis Pelajar</h3>
+                            <p class="text-xs text-gray-500">Semangat Belajar & Berorganisasi</p>
+                        </div>
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed mb-4">
+                        Sebagai seorang pelajar, saya berdedikasi tinggi pada pengembangan kemampuan intelektual dan sosial. Saya aktif mengasah ketelitian, kemampuan komunikasi, dan kepemimpinan melalui tugas sekolah maupun kegiatan organisasi.
+                    </p>
+                    <div class="grid grid-cols-2 gap-3 pt-4 border-t border-rose-100">
+                        <div class="bg-white/80 p-3 rounded-2xl border border-rose-100">
+                            <p class="text-[10px] text-gray-400 uppercase font-bold">Fokus</p>
+                            <p class="text-xs font-bold text-blush-dark">Manajemen & Sains</p>
+                        </div>
+                        <div class="bg-white/80 p-3 rounded-2xl border border-rose-100">
+                            <p class="text-[10px] text-gray-400 uppercase font-bold">Status</p>
+                            <p class="text-xs font-bold text-blush-accent">Siswa Aktif</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soft Skills & Personality Card -->
+                <div class="glass-panel p-6 rounded-3xl hover-lift border border-rose-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-3 bg-amber-100 rounded-2xl text-amber-600">
+                                <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-serif text-lg font-bold text-blush-dark">Soft Skills</h3>
+                        </div>
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-medium text-gray-700">Kepemimpinan</span>
+                                <span class="text-blush-accent font-bold">90%</span>
+                            </div>
+                            <div class="w-full h-2 bg-rose-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-blush-accent rounded-full w-[90%]"></div>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs pt-1">
+                                <span class="font-medium text-gray-700">Kreativitas (Culinary)</span>
+                                <span class="text-blush-accent font-bold">95%</span>
+                            </div>
+                            <div class="w-full h-2 bg-rose-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-blush-accent rounded-full w-[95%]"></div>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs pt-1">
+                                <span class="font-medium text-gray-700">Kerja Sama Tim</span>
+                                <span class="text-blush-accent font-bold">88%</span>
+                            </div>
+                            <div class="w-full h-2 bg-rose-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-blush-accent rounded-full w-[88%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-rose-100 text-center">
+                        <span class="text-[11px] text-gray-500 italic">"Disiplin, Estetis, & Berorientasi Solusi"</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: HOBI MEMASAK (CULINARY STUDIO) ================= -->
+        <section id="view-hobi" class="page-view">
+            <!-- Header -->
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="font-script text-3xl text-blush-accent block">Kitchen Studio & Passion</span>
+                <h2 class="text-3xl font-serif font-bold text-blush-dark">Dapur & Seni Kuliner</h2>
+                <p class="text-xs text-gray-500 mt-1">Eksplorasi rasa, aroma, dan keindahan penataan masakan.</p>
+                <div class="w-12 h-1 bg-blush-accent mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <!-- Culinary Showcase Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Recipe Card 1 -->
+                <div class="glass-panel p-5 rounded-3xl hover-lift recipe-shadow border border-rose-200">
+                    <div class="w-full h-40 rounded-2xl bg-gradient-to-tr from-rose-200 to-rose-100 flex items-center justify-center mb-4 relative overflow-hidden">
+                        <i data-lucide="cake" class="w-16 h-16 text-blush-accent opacity-90"></i>
+                        <span class="absolute top-3 left-3 bg-white/80 px-2.5 py-1 rounded-full text-[10px] font-bold text-blush-dark">Pastry & Cake</span>
+                    </div>
+                    <h3 class="font-serif font-bold text-base text-blush-dark">Anatomi Baking & Pastry</h3>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Seni menakar bahan secara akurat. Memanggang kue mengajarkan bahwa takaran yang pas akan membuahkan rasa manis yang sempurna.
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-rose-100 flex items-center justify-between text-xs">
+                        <span class="text-blush-accent font-semibold">Tingkat Ketelitian</span>
+                        <i data-lucide="sparkle" class="w-4 h-4 text-amber-500"></i>
+                    </div>
+                </div>
+
+                <!-- Recipe Card 2 -->
+                <div class="glass-panel p-5 rounded-3xl hover-lift recipe-shadow border border-rose-200">
+                    <div class="w-full h-40 rounded-2xl bg-gradient-to-tr from-amber-200 to-rose-100 flex items-center justify-center mb-4 relative overflow-hidden">
+                        <i data-lucide="utensils-crossed" class="w-16 h-16 text-amber-700 opacity-90"></i>
+                        <span class="absolute top-3 left-3 bg-white/80 px-2.5 py-1 rounded-full text-[10px] font-bold text-blush-dark">Nusantara Food</span>
+                    </div>
+                    <h3 class="font-serif font-bold text-base text-blush-dark">Kuliner Rempah Indonesia</h3>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Meracik bumbu kaya rempah-rempah asli Indonesia. Mengharmonisasikan gurih, pedas, dan aroma hidangan kaya budaya.
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-rose-100 flex items-center justify-between text-xs">
+                        <span class="text-blush-accent font-semibold">Kaya Cita Rasa</span>
+                        <i data-lucide="flame" class="w-4 h-4 text-rose-500"></i>
+                    </div>
+                </div>
+
+                <!-- Recipe Card 3 -->
+                <div class="glass-panel p-5 rounded-3xl hover-lift recipe-shadow border border-rose-200">
+                    <div class="w-full h-40 rounded-2xl bg-gradient-to-tr from-rose-300 to-blush-light flex items-center justify-center mb-4 relative overflow-hidden">
+                        <i data-lucide="sparkles" class="w-16 h-16 text-blush-dark opacity-90"></i>
+                        <span class="absolute top-3 left-3 bg-white/80 px-2.5 py-1 rounded-full text-[10px] font-bold text-blush-dark">Food Plating</span>
+                    </div>
+                    <h3 class="font-serif font-bold text-base text-blush-dark">Estetika Saji (Plating)</h3>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Menata sajian dengan visual bermutu tinggi. Kuliner tidak hanya tentang rasa di lidah, tetapi juga tentang seni dipandang mata.
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-rose-100 flex items-center justify-between text-xs">
+                        <span class="text-blush-accent font-semibold">Visual Art</span>
+                        <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: CITA-CITA CEO BUMN (CORPORATE EXECUTIVE VIBE) ================= -->
+        <section id="view-ceo" class="page-view">
+            <!-- Header -->
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="font-script text-3xl text-blush-accent block">Karir & Visi Masa Depan</span>
+                <h2 class="text-3xl font-serif font-bold text-blush-dark">Roadmap Cita-Cita: CEO BUMN</h2>
+                <div class="w-12 h-1 bg-blush-gold mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <!-- Executive Banner Card -->
+            <div class="glass-panel p-8 rounded-3xl border border-blush-gold/40 shadow-xl bg-gradient-to-br from-white via-rose-50/40 to-amber-50/30 mb-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-3 text-center md:text-left">
+                        <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-bold uppercase tracking-wider">Vision Statement</span>
+                        <h3 class="text-2xl font-serif font-bold text-blush-dark">Membangun Negeri Melalui Kepemimpinan BUMN</h3>
+                        <p class="text-xs md:text-sm text-gray-600 max-w-xl leading-relaxed">
+                            BUMN adalah tulang punggung perekonomian nasional. Bercita-cita menjadi CEO BUMN berarti siap mengemban amanah besar untuk mengelola aset negara secara profesional, modern, dan memberikan dampak nyata bagi masyarakat luas.
+                        </p>
+                    </div>
+                    <div class="w-20 h-20 rounded-2xl bg-blush-accent text-white flex items-center justify-center flex-shrink-0 shadow-lg shadow-rose-400/30">
+                        <i data-lucide="crown" class="w-10 h-10"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Pillars of Leadership -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 rounded-2xl border border-rose-200 hover-lift">
+                    <div class="w-10 h-10 rounded-xl bg-rose-100 text-blush-accent flex items-center justify-center mb-4">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-serif font-bold text-blush-dark text-sm">1. Integritas Tinggi</h4>
+                    <p class="text-xs text-gray-500 mt-2">Menjunjung kejujuran dan tata kelola perusahaan yang bersih (Good Corporate Governance).</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-rose-200 hover-lift">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
+                        <i data-lucide="trending-up" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-serif font-bold text-blush-dark text-sm">2. Inovasi Bisnis</h4>
+                    <p class="text-xs text-gray-500 mt-2">Mendorong transformasi digital dan efisiensi operasional BUMN agar berdaya saing global.</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-rose-200 hover-lift">
+                    <div class="w-10 h-10 rounded-xl bg-rose-100 text-blush-accent flex items-center justify-center mb-4">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-serif font-bold text-blush-dark text-sm">3. Empati & Kepemimpinan</h4>
+                    <p class="text-xs text-gray-500 mt-2">Mengayomi seluruh elemen tim dan berkontribusi sosial bagi kesejahteraan rakyat Indonesia.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: KONTAK (LETTER & ENVELOPE VIBE) ================= -->
+        <section id="view-kontak" class="page-view">
+            <!-- Header -->
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="font-script text-3xl text-blush-accent block">Mari Berdiskusi</span>
+                <h2 class="text-3xl font-serif font-bold text-blush-dark">Hubungi Nur Halimah</h2>
+                <div class="w-12 h-1 bg-blush-accent mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <!-- Envelope Form Box -->
+            <div class="max-w-xl mx-auto glass-panel p-8 rounded-3xl border border-rose-300 shadow-xl relative overflow-hidden">
+                <!-- Floral Background Watermark -->
+                <i data-lucide="flower-2" class="w-48 h-48 absolute -bottom-10 -right-10 text-rose-200/40 pointer-events-none"></i>
+
+                <form id="contact-form-spa" class="space-y-4 relative z-10">
+                    <div>
+                        <label class="block text-xs font-semibold text-blush-dark mb-1">Nama Lengkap</label>
+                        <input type="text" required placeholder="Tuliskan nama Anda..." class="w-full px-4 py-3 rounded-xl border border-rose-200 text-xs focus:outline-none focus:border-blush-accent bg-white/80 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-blush-dark mb-1">Email Anda</label>
+                        <input type="email" required placeholder="email@domain.com" class="w-full px-4 py-3 rounded-xl border border-rose-200 text-xs focus:outline-none focus:border-blush-accent bg-white/80 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-blush-dark mb-1">Pesan / Sapaan</label>
+                        <textarea rows="4" required placeholder="Tuliskan pesan hangat atau topik diskusi..." class="w-full px-4 py-3 rounded-xl border border-rose-200 text-xs focus:outline-none focus:border-blush-accent bg-white/80 transition-all"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-blush-accent hover:bg-rose-600 text-white font-medium rounded-xl text-xs uppercase tracking-wider shadow-md hover-lift flex items-center justify-center gap-2 transition-all">
+                        <i data-lucide="send" class="w-4 h-4"></i> Kirimkan Surat Pesan
+                    </button>
+                    <p id="form-msg" class="text-xs text-center text-green-700 font-medium hidden">Terima kasih! Pesan Anda telah terkirim dengan hangat.</p>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-rose-200/60 bg-white/50 py-6 text-center text-xs text-gray-500 relative z-10">
+        <p>© 2026 Nur Halimah • Pelajar & Calon CEO BUMN. Built with Aesthetic Rose theme.</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT FOR SPA VIEW SWITCHING -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Single Page View Switching Logic
+        function switchPage(pageId) {
+            // Hide all views
+            const views = document.querySelectorAll('.page-view');
+            views.forEach(view => {
+                view.classList.remove('active-view');
+            });
+
+            // Deactivate all nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('bg-blush-accent', 'text-white', 'shadow-md');
+                btn.classList.add('text-blush-dark');
+            });
+
+            // Activate Target View
+            const targetView = document.getElementById(`view-${pageId}`);
+            if (targetView) {
+                targetView.classList.add('active-view');
+            }
+
+            // Highlight Target Nav Button
+            const targetNav = document.getElementById(`nav-${pageId}`);
+            if (targetNav) {
+                targetNav.classList.add('bg-blush-accent', 'text-white', 'shadow-md');
+                targetNav.classList.remove('text-blush-dark');
+            }
+
+            // Scroll to top of view smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Default Load: Beranda
+        document.addEventListener('DOMContentLoaded', () => {
+            switchPage('beranda');
+        });
+
+        // Form Submit Handler
+        const form = document.getElementById('contact-form-spa');
+        const formMsg = document.getElementById('form-msg');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            formMsg.classList.remove('hidden');
+            form.reset();
+            setTimeout(() => {
+                formMsg.classList.add('hidden');
+            }, 4000);
+        });
+
+        // --- FALLING PETALS CANVAS ENGINE ---
+        const canvas = document.getElementById('petal-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        let petalsEnabled = true;
+        const petals = [];
+        const petalCount = 20;
+
+        const colors = ['#FBA5BA', '#F77395', '#F4E3E6', '#D87093'];
+
+        class Petal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height - height;
+                this.size = Math.random() * 7 + 5;
+                this.speedY = Math.random() * 1.2 + 0.6;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = Math.random() * 0.5 + 0.4;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.angle += this.spin;
+
+                if (this.y > height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.angle * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.size, -this.size, -this.size, this.size, 0, this.size * 1.4);
+                ctx.bezierCurveTo(this.size, this.size, this.size, -this.size, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < petalCount; i++) {
+            petals.push(new Petal());
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, width, height);
+            if (petalsEnabled) {
+                petals.forEach(petal => {
+                    petal.update();
+                    petal.draw();
+                });
+            }
+            requestAnimationFrame(animatePetals);
+        }
+
+        animatePetals();
+
+        // Petals Toggle Switcher
+        document.getElementById('toggle-petals').addEventListener('click', function() {
+            petalsEnabled = !petalsEnabled;
+            if(!petalsEnabled) {
+                ctx.clearRect(0, 0, width, height);
+                this.classList.add('opacity-40');
+            } else {
+                this.classList.remove('opacity-40');
+            }
+        });
+    </script>
+</body>
+</html>
